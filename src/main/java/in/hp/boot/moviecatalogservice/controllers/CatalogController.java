@@ -16,8 +16,13 @@ public class CatalogController {
     @Autowired
     private CatalogService catalogService;
 
-    @GetMapping("/{email}")
+    @GetMapping("/ratings/{email}")
     public ResponseEntity<UserCatalog> getUserCatalog(@PathVariable String email) {
-        return ResponseEntity.ok().body(catalogService.getUserCatalog(email));
+        return ResponseEntity.ok().body(catalogService.getUserRatingCatalog(email));
+    }
+
+    @GetMapping("/watchlist/{email}")
+    public ResponseEntity<UserCatalog> getUserWatchlist(@PathVariable String email) {
+        return ResponseEntity.ok(catalogService.getUserWatchlistCatalog(email));
     }
 }

@@ -1,9 +1,6 @@
 package in.hp.boot.moviecatalogservice.services;
 
-import in.hp.boot.moviecatalogservice.models.MovieInfo;
-import in.hp.boot.moviecatalogservice.models.RatingsResponse;
-import in.hp.boot.moviecatalogservice.models.UserCatalog;
-import in.hp.boot.moviecatalogservice.models.UserDetail;
+import in.hp.boot.moviecatalogservice.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +23,7 @@ public class CatalogService {
         return userInfoService.getUser(email);
     }
 
-    public UserCatalog getUserCatalog(String email) {
+    public UserCatalog getUserRatingCatalog(String email) {
         UserDetail userDetail = validateUser(email);
 
         RatingsResponse ratingsResponse = ratingDataService.getUserRating(email);
@@ -36,6 +33,22 @@ public class CatalogService {
             movieInfo.setUser_rating(rating.getRating());
             return movieInfo;
         }).collect(Collectors.toList());
+
+        UserCatalog userCatalog = new UserCatalog();
+        userCatalog.setMovieInfos(movieInfos);
+        userCatalog.setEmail(email);
+        userCatalog.setName(userDetail.getFname() + " " + userDetail.getLname());
+        return userCatalog;
+    }
+
+    public UserCatalog getUserWatchlistCatalog(String email) {
+        UserDetail userDetail = validateUser(email);
+
+        WatchlistResponse watchlist = ratingDataService.getUserWatchlist(email);
+
+        List<MovieInfo> movieInfos = watchlist.getMovies().stream()
+                .map(movieId -> movieInfoService.getMovieInfo(movieId))
+                .collect(Collectors.toList());
 
         UserCatalog userCatalog = new UserCatalog();
         userCatalog.setMovieInfos(movieInfos);
