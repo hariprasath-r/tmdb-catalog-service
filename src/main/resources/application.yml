@@ -1,0 +1,8 @@
+server:
+  port: 8400
+  error.include-stacktrace: never
+
+spring:
+  application.name: movie-catalog-service
+
+management.endpoints.web.exposure.include: "*"
