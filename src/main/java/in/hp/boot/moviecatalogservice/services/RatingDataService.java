@@ -1,5 +1,6 @@
 package in.hp.boot.moviecatalogservice.services;
 
+import in.hp.boot.moviecatalogservice.configs.RatingDataServiceResources;
 import in.hp.boot.moviecatalogservice.exceptions.RestTemplateResponseException;
 import in.hp.boot.moviecatalogservice.models.RatingsResponse;
 import in.hp.boot.moviecatalogservice.models.WatchlistResponse;
@@ -19,10 +20,14 @@ public class RatingDataService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private RatingDataServiceResources ratingDataServiceResources;
+
     public RatingsResponse getUserRating(String email) {
         try {
-            URI uri = UriComponentsBuilder.fromUriString("http://localhost:8300/v1/ratings/{param}")
-                    .build(email);
+            URI uri = UriComponentsBuilder.fromUriString(ratingDataServiceResources.getRatingResource())
+                    .pathSegment(email)
+                    .build().toUri();
             ResponseEntity<RatingsResponse> response = restTemplate.getForEntity(uri, RatingsResponse.class);
             return response.getBody();
         } catch (HttpClientErrorException e) {
@@ -33,8 +38,9 @@ public class RatingDataService {
 
     public WatchlistResponse getUserWatchlist(String email) {
         try {
-            URI uri = UriComponentsBuilder.fromUriString("http://localhost:8300/v1/watchlist/{param}")
-                    .build(email);
+            URI uri = UriComponentsBuilder.fromUriString(ratingDataServiceResources.getWatchlistResource())
+                    .pathSegment(email)
+                    .build().toUri();
             ResponseEntity<WatchlistResponse> response = restTemplate.getForEntity(uri, WatchlistResponse.class);
             return response.getBody();
         } catch (HttpClientErrorException e) {

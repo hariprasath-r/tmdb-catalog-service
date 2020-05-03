@@ -1,5 +1,6 @@
 package in.hp.boot.moviecatalogservice.services;
 
+import in.hp.boot.moviecatalogservice.configs.UserInfoServiceResources;
 import in.hp.boot.moviecatalogservice.exceptions.RestTemplateResponseException;
 import in.hp.boot.moviecatalogservice.models.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,15 @@ public class UserInfoService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private UserInfoServiceResources userInfoServiceResources;
+
     public UserDetail getUser(String email) {
         try {
-            URI uri = UriComponentsBuilder.fromUriString("http://localhost:8100/v1/users/{param}")
-                    .build(email);
+            URI uri = UriComponentsBuilder.fromUriString(userInfoServiceResources.getUsersResource())
+                    .pathSegment(email)
+                    .build().toUri();
+
             ResponseEntity<UserDetail> response = restTemplate.getForEntity(uri, UserDetail.class);
             return response.getBody();
         } catch (HttpClientErrorException e) {

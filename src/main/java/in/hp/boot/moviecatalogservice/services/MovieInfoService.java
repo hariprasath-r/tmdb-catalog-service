@@ -1,5 +1,6 @@
 package in.hp.boot.moviecatalogservice.services;
 
+import in.hp.boot.moviecatalogservice.configs.MovieInfoServiceResources;
 import in.hp.boot.moviecatalogservice.exceptions.RestTemplateResponseException;
 import in.hp.boot.moviecatalogservice.models.MovieInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,14 @@ public class MovieInfoService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private MovieInfoServiceResources movieInfoServiceResources;
+
     public MovieInfo getMovieInfo(String movieId) {
         try {
-            URI uri = UriComponentsBuilder.fromUriString("http://localhost:8200/v1/movie-info/{param}")
-                    .build(movieId);
+            URI uri = UriComponentsBuilder.fromUriString(movieInfoServiceResources.getMovieInfoResource())
+                    .pathSegment(movieId)
+                    .build().toUri();
             ResponseEntity<MovieInfo> response = restTemplate.getForEntity(uri, MovieInfo.class);
             return response.getBody();
         } catch (HttpClientErrorException e) {
