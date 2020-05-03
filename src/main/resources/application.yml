@@ -6,3 +6,9 @@ spring:
   application.name: movie-catalog-service
 
 management.endpoints.web.exposure.include: "*"
+
+endpoints:
+  user-info-service: http://localhost:8100
+  movie-info-service: http://localhost:8200
+  rating-data-service: http://localhost:8300
+  version: /v1
