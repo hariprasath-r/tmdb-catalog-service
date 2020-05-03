@@ -37,7 +37,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
             genericException = mapper.readValue(responseBodyAsString, GenericException.class);
             return responseEntity.body(genericException);
         } catch (JsonProcessingException e) {
-            genericException = new GenericException(new Date().toString(), ex.getMessage(),
+            genericException = new GenericException(new Date().toString(), e.getMessage(),
                     request.getDescription(false));
             return responseEntity.body(genericException);
         }

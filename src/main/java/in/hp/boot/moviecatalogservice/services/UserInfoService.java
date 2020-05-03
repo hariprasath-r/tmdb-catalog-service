@@ -1,9 +1,16 @@
 package in.hp.boot.moviecatalogservice.services;
 
+import in.hp.boot.moviecatalogservice.exceptions.RestTemplateResponseException;
 import in.hp.boot.moviecatalogservice.models.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class UserInfoService {
@@ -12,6 +19,14 @@ public class UserInfoService {
     private RestTemplate restTemplate;
 
     public UserDetail getUser(String email) {
-        return restTemplate.getForObject("http://localhost:8100/v1/users/" + email, UserDetail.class);
+        try {
+            URI uri = UriComponentsBuilder.fromUriString("http://localhost:8100/v1/users/{param}")
+                    .build(email);
+            ResponseEntity<UserDetail> response = restTemplate.getForEntity(uri, UserDetail.class);
+            return response.getBody();
+        } catch (HttpClientErrorException e) {
+            throw new RestTemplateResponseException(e.getStatusCode(), e.getMessage(),
+                    e.getResponseBodyAsString(StandardCharsets.UTF_8));
+        }
     }
 }
