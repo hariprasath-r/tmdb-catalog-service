@@ -10,10 +10,7 @@ public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
 
     @Override
     public boolean hasError(ClientHttpResponse response) throws IOException {
-        if (isResponseStatus4xxOr5xx(response))
-            return true;
-        else
-            return false;
+        return isResponseStatus4xxOr5xx(response);
     }
 
     private boolean isResponseStatus4xxOr5xx(ClientHttpResponse response) throws IOException {

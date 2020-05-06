@@ -5,7 +5,8 @@ public class GenericException {
     private String message;
     private String details;
 
-    public GenericException() { }
+    public GenericException() {
+    }
 
     public GenericException(String timestamp, String message, String details) {
         this.timestamp = timestamp;
