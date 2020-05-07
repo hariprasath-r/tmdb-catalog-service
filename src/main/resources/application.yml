@@ -2,13 +2,22 @@ server:
   port: 8400
   error.include-stacktrace: never
 
-spring:
-  application.name: movie-catalog-service
-
 management.endpoints.web.exposure.include: "*"
 
+eureka:
+  client:
+    enabled: true
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+  instance:
+    hostname: ${spring.application.name}
+    # registers with ip address instead of hostname
+    preferIpAddress: false
+
 endpoints:
-  user-info-service: http://localhost:8100
-  movie-info-service: http://localhost:8200
-  rating-data-service: http://localhost:8300
+  user-info-service: http://user-info-service
+  movie-info-service: http://movie-info-service
+  rating-data-service: http://rating-data-service
   version: /v1

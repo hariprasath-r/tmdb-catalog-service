@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MovieInfoServiceResources {
     public final String MOVIE_INFO = "/movie-info";
-    private String movieInfoService;
-    private String version;
+    private final String movieInfoService;
+    private final String version;
 
     @Autowired
     public MovieInfoServiceResources(EndpointsConfig endpointsConfig) {
