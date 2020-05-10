@@ -1,9 +1,12 @@
 package in.hp.boot.moviecatalogservice.services;
 
+import feign.FeignException;
 import in.hp.boot.moviecatalogservice.configs.UserInfoServiceResources;
+import in.hp.boot.moviecatalogservice.delegateproxies.UserInfoServiceProxy;
 import in.hp.boot.moviecatalogservice.exceptions.RestTemplateResponseException;
 import in.hp.boot.moviecatalogservice.models.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -12,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 @Service
 public class UserInfoService {
@@ -21,6 +25,9 @@ public class UserInfoService {
 
     @Autowired
     private UserInfoServiceResources userInfoServiceResources;
+
+    @Autowired
+    private UserInfoServiceProxy userInfoServiceProxy;
 
     public UserDetail getUser(String email) {
         try {
@@ -33,6 +40,17 @@ public class UserInfoService {
         } catch (HttpClientErrorException e) {
             throw new RestTemplateResponseException(e.getStatusCode(), e.getMessage(),
                     e.getResponseBodyAsString(StandardCharsets.UTF_8));
+        }
+    }
+
+    public UserDetail getUserByFeign(String email) {
+        try {
+            return userInfoServiceProxy.getUserByEmail(email);
+        } catch (FeignException e) {
+            HttpStatus status = HttpStatus.resolve(e.status());
+            status = Objects.nonNull(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new RestTemplateResponseException(status, e.getMessage(),
+                    e.contentUTF8());
         }
     }
 }

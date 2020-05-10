@@ -20,7 +20,7 @@ public class CatalogService {
     private MovieInfoService movieInfoService;
 
     private UserDetail validateUser(String email) {
-        return userInfoService.getUser(email);
+        return userInfoService.getUserByFeign(email);
     }
 
     public UserCatalog getUserRatingCatalog(String email) {
