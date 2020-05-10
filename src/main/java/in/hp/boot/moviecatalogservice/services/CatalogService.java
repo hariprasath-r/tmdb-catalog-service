@@ -20,16 +20,16 @@ public class CatalogService {
     private MovieInfoService movieInfoService;
 
     private UserDetail validateUser(String email) {
-        return userInfoService.getUser(email);
+        return userInfoService.getUserByFeign(email);
     }
 
     public UserCatalog getUserRatingCatalog(String email) {
         UserDetail userDetail = validateUser(email);
 
-        RatingsResponse ratingsResponse = ratingDataService.getUserRating(email);
+        RatingsResponse ratingsResponse = ratingDataService.getUserRatingFeign(email);
 
         List<MovieInfo> movieInfos = ratingsResponse.getRatings().stream().map(rating -> {
-            MovieInfo movieInfo = movieInfoService.getMovieInfo(rating.getMovieId());
+            MovieInfo movieInfo = movieInfoService.getMovieInfoFeign(rating.getMovieId());
             movieInfo.setUser_rating(rating.getRating());
             return movieInfo;
         }).collect(Collectors.toList());
@@ -44,10 +44,10 @@ public class CatalogService {
     public UserCatalog getUserWatchlistCatalog(String email) {
         UserDetail userDetail = validateUser(email);
 
-        WatchlistResponse watchlist = ratingDataService.getUserWatchlist(email);
+        WatchlistResponse watchlist = ratingDataService.getUserWatchlistFeign(email);
 
         List<MovieInfo> movieInfos = watchlist.getMovies().stream()
-                .map(movieId -> movieInfoService.getMovieInfo(movieId))
+                .map(movieId -> movieInfoService.getMovieInfoFeign(movieId))
                 .collect(Collectors.toList());
 
         UserCatalog userCatalog = new UserCatalog();
