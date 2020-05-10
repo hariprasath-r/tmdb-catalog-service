@@ -13,5 +13,5 @@ public interface RatingDataServiceProxy {
     RatingsResponse getRatingsForUser(@PathVariable String userId);
 
     @GetMapping("${rating-data-service.watchlist}/{userId}")
-    public WatchlistResponse getWatchlistForUser(@PathVariable String userId);
+    WatchlistResponse getWatchlistForUser(@PathVariable String userId);
 }

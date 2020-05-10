@@ -19,3 +19,8 @@ rating-data-service:
   watchlist: /watchlist
   rating-resource: ${endpoints.version}${rating-data-service.ratings}
   watchlist-resource: ${endpoints.version}${rating-data-service.watchlist}
+
+movie-info-service:
+  name: movie-info-service
+  movie-info: /movie-info
+  movie-info-resource: ${endpoints.version}${movie-info-service.movie-info}

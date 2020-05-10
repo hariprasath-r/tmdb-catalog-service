@@ -29,7 +29,7 @@ public class CatalogService {
         RatingsResponse ratingsResponse = ratingDataService.getUserRatingFeign(email);
 
         List<MovieInfo> movieInfos = ratingsResponse.getRatings().stream().map(rating -> {
-            MovieInfo movieInfo = movieInfoService.getMovieInfo(rating.getMovieId());
+            MovieInfo movieInfo = movieInfoService.getMovieInfoFeign(rating.getMovieId());
             movieInfo.setUser_rating(rating.getRating());
             return movieInfo;
         }).collect(Collectors.toList());
@@ -47,7 +47,7 @@ public class CatalogService {
         WatchlistResponse watchlist = ratingDataService.getUserWatchlistFeign(email);
 
         List<MovieInfo> movieInfos = watchlist.getMovies().stream()
-                .map(movieId -> movieInfoService.getMovieInfo(movieId))
+                .map(movieId -> movieInfoService.getMovieInfoFeign(movieId))
                 .collect(Collectors.toList());
 
         UserCatalog userCatalog = new UserCatalog();
