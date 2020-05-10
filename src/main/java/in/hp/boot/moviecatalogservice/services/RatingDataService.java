@@ -1,10 +1,13 @@
 package in.hp.boot.moviecatalogservice.services;
 
+import feign.FeignException;
 import in.hp.boot.moviecatalogservice.configs.RatingDataServiceResources;
+import in.hp.boot.moviecatalogservice.delegateproxies.RatingDataServiceProxy;
 import in.hp.boot.moviecatalogservice.exceptions.RestTemplateResponseException;
 import in.hp.boot.moviecatalogservice.models.RatingsResponse;
 import in.hp.boot.moviecatalogservice.models.WatchlistResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -13,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 @Service
 public class RatingDataService {
@@ -22,6 +26,9 @@ public class RatingDataService {
 
     @Autowired
     private RatingDataServiceResources ratingDataServiceResources;
+
+    @Autowired
+    private RatingDataServiceProxy ratingDataServiceProxy;
 
     public RatingsResponse getUserRating(String email) {
         try {
@@ -33,6 +40,17 @@ public class RatingDataService {
         } catch (HttpClientErrorException e) {
             throw new RestTemplateResponseException(e.getStatusCode(), e.getMessage(),
                     e.getResponseBodyAsString(StandardCharsets.UTF_8));
+        }
+    }
+
+    public RatingsResponse getUserRatingFeign(String email) {
+        try {
+            return ratingDataServiceProxy.getRatingsForUser(email);
+        } catch (FeignException e) {
+            HttpStatus status = HttpStatus.resolve(e.status());
+            status = Objects.nonNull(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new RestTemplateResponseException(status, e.getMessage(),
+                    e.contentUTF8());
         }
     }
 

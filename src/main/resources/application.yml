@@ -10,4 +10,12 @@ endpoints:
 
 user-info-service:
   name: user-info-service
-  users-resource: ${endpoints.version}/users
+  users: /users
+  users-resource: ${endpoints.version}${user-info-service.users}
+
+rating-data-service:
+  name: rating-data-service
+  ratings: /ratings
+  watchlist: /watchlist
+  rating-resource: ${endpoints.version}${rating-data-service.ratings}
+  watchlist-resource: ${endpoints.version}${rating-data-service.watchlist}

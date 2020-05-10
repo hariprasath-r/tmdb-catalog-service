@@ -26,7 +26,7 @@ public class CatalogService {
     public UserCatalog getUserRatingCatalog(String email) {
         UserDetail userDetail = validateUser(email);
 
-        RatingsResponse ratingsResponse = ratingDataService.getUserRating(email);
+        RatingsResponse ratingsResponse = ratingDataService.getUserRatingFeign(email);
 
         List<MovieInfo> movieInfos = ratingsResponse.getRatings().stream().map(rating -> {
             MovieInfo movieInfo = movieInfoService.getMovieInfo(rating.getMovieId());
