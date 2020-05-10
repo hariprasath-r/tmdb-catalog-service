@@ -44,7 +44,7 @@ public class CatalogService {
     public UserCatalog getUserWatchlistCatalog(String email) {
         UserDetail userDetail = validateUser(email);
 
-        WatchlistResponse watchlist = ratingDataService.getUserWatchlist(email);
+        WatchlistResponse watchlist = ratingDataService.getUserWatchlistFeign(email);
 
         List<MovieInfo> movieInfos = watchlist.getMovies().stream()
                 .map(movieId -> movieInfoService.getMovieInfo(movieId))

@@ -66,4 +66,15 @@ public class RatingDataService {
                     e.getResponseBodyAsString(StandardCharsets.UTF_8));
         }
     }
+
+    public WatchlistResponse getUserWatchlistFeign(String email) {
+        try {
+            return ratingDataServiceProxy.getWatchlistForUser(email);
+        } catch (FeignException e) {
+            HttpStatus status = HttpStatus.resolve(e.status());
+            status = Objects.nonNull(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
+            throw new RestTemplateResponseException(status, e.getMessage(),
+                    e.contentUTF8());
+        }
+    }
 }
