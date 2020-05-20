@@ -2,6 +2,7 @@ package in.hp.boot.moviecatalogservice.exceptions;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +17,14 @@ import java.util.Date;
 
 @RestController
 @RestControllerAdvice
+@Slf4j
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
         GenericException genericException = new GenericException(
                 new Date().toString(), ex.getMessage(), request.getDescription(false));
+        log.error("Exception: handleAllException [{}]", genericException);
         return new ResponseEntity<>(genericException, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -35,10 +38,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         GenericException genericException;
         try {
             genericException = mapper.readValue(responseBodyAsString, GenericException.class);
+            log.error("Exception: handleHttpClientErrorException [{}]", genericException);
             return responseEntity.body(genericException);
         } catch (JsonProcessingException e) {
             genericException = new GenericException(new Date().toString(), e.getMessage(),
                     request.getDescription(false));
+            log.error("Exception: handleHttpClientErrorException [{}]", genericException);
             return responseEntity.body(genericException);
         }
     }
@@ -47,6 +52,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleAllException(ResourceNotFoundException ex, WebRequest request) {
         GenericException genericException = new GenericException(
                 new Date().toString(), ex.getMessage(), request.getDescription(false));
+        log.error("Exception: ResourceNotFoundException [{}]", genericException);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(genericException);
     }
 
@@ -54,6 +60,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public final ResponseEntity<Object> handleAllException(ResourceConflictException ex, WebRequest request) {
         GenericException genericException = new GenericException(
                 new Date().toString(), ex.getMessage(), request.getDescription(false));
+        log.error("Exception: ResourceConflictException [{}]", genericException);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(genericException);
     }
 
@@ -63,6 +70,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         GenericException genericException = new GenericException(
                 new Date().toString(), "Validation failed for input.", ex.getBindingResult().toString()
         );
+        log.error("Exception: handleMethodArgumentNotValid [{}]", genericException);
         return new ResponseEntity<>(genericException, status);
     }
 }

@@ -5,6 +5,7 @@ import in.hp.boot.moviecatalogservice.configs.MovieInfoServiceResources;
 import in.hp.boot.moviecatalogservice.delegateproxies.MovieInfoServiceProxy;
 import in.hp.boot.moviecatalogservice.exceptions.RestTemplateResponseException;
 import in.hp.boot.moviecatalogservice.models.MovieInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class MovieInfoService {
 
     @Autowired
@@ -44,10 +46,12 @@ public class MovieInfoService {
 
     public MovieInfo getMovieInfoFeign(String movieId) {
         try {
+            log.debug("getMovieInfoFeign: fetching movie info for [{}]", movieId);
             return movieInfoServiceProxy.getInfo(movieId);
         } catch (FeignException e) {
             HttpStatus status = HttpStatus.resolve(e.status());
             status = Objects.nonNull(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
+            log.error("Exception: getMovieInfoFeign MovieId: [{}], Status: [{}]", movieId, status);
             throw new RestTemplateResponseException(status, e.getMessage(),
                     e.contentUTF8());
         }
