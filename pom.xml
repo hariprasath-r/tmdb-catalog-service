@@ -50,6 +50,12 @@
 			<version>1.2.5.RELEASE</version>
 		</dependency>
 
+		<!--	Tracing 	-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-sleuth</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
