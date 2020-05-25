@@ -45,20 +45,30 @@ public class MovieInfoService {
         }
     }
 
-    @HystrixCommand(fallbackMethod = "getMovieInfoFeignFallback")
+    /**
+     * Replacing Hystrix command fallback with Feign fallback mechanism
+     * @param movieId
+     * @return
+     */
+//    @HystrixCommand(fallbackMethod = "getMovieInfoFeignFallback")
     public MovieInfo getMovieInfoFeign(String movieId) {
-        try {
+//        try {
             log.debug("getMovieInfoFeign: fetching movie info for [{}]", movieId);
             return movieInfoServiceProxy.getInfo(movieId);
-        } catch (FeignException e) {
-            HttpStatus status = HttpStatus.resolve(e.status());
-            status = Objects.nonNull(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
-            log.error("Exception: getMovieInfoFeign MovieId: [{}], Status: [{}]", movieId, status);
-            throw new RestTemplateResponseException(status, e.getMessage(),
-                    e.contentUTF8());
-        }
+//        } catch (FeignException e) {
+//            HttpStatus status = HttpStatus.resolve(e.status());
+//            status = Objects.nonNull(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
+//            log.error("Exception: getMovieInfoFeign MovieId: [{}], Status: [{}]", movieId, status);
+//            throw new RestTemplateResponseException(status, e.getMessage(),
+//                    e.contentUTF8());
+//        }
     }
 
+    /**
+     * Fallback method for hystrix
+     * @param movieId
+     * @return
+     */
     public MovieInfo getMovieInfoFeignFallback(String movieId) {
         return new MovieInfo();
     }
