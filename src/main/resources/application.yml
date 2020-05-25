@@ -2,6 +2,8 @@ server:
   port: ${PORT:8400}
   error.include-stacktrace: never
 
+feign.hystrix.enabled: false
+
 endpoints:
   user-info-service: http://user-info-service
   movie-info-service: http://movie-info-service
