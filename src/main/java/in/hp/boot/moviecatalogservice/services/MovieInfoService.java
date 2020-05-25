@@ -1,5 +1,6 @@
 package in.hp.boot.moviecatalogservice.services;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import feign.FeignException;
 import in.hp.boot.moviecatalogservice.configs.MovieInfoServiceResources;
 import in.hp.boot.moviecatalogservice.delegateproxies.MovieInfoServiceProxy;
@@ -44,6 +45,7 @@ public class MovieInfoService {
         }
     }
 
+    @HystrixCommand(fallbackMethod = "getMovieInfoFeignFallback")
     public MovieInfo getMovieInfoFeign(String movieId) {
         try {
             log.debug("getMovieInfoFeign: fetching movie info for [{}]", movieId);
@@ -55,5 +57,9 @@ public class MovieInfoService {
             throw new RestTemplateResponseException(status, e.getMessage(),
                     e.contentUTF8());
         }
+    }
+
+    public MovieInfo getMovieInfoFeignFallback(String movieId) {
+        return new MovieInfo();
     }
 }
