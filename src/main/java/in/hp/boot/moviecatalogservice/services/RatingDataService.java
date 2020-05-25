@@ -6,6 +6,7 @@ import in.hp.boot.moviecatalogservice.delegateproxies.RatingDataServiceProxy;
 import in.hp.boot.moviecatalogservice.exceptions.RestTemplateResponseException;
 import in.hp.boot.moviecatalogservice.models.RatingsResponse;
 import in.hp.boot.moviecatalogservice.models.WatchlistResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class RatingDataService {
 
     @Autowired
@@ -49,6 +51,7 @@ public class RatingDataService {
         } catch (FeignException e) {
             HttpStatus status = HttpStatus.resolve(e.status());
             status = Objects.nonNull(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
+            log.error("Exception: getUserRatingFeign Email: [{}], Status: [{}]", email, status);
             throw new RestTemplateResponseException(status, e.getMessage(),
                     e.contentUTF8());
         }
@@ -73,6 +76,7 @@ public class RatingDataService {
         } catch (FeignException e) {
             HttpStatus status = HttpStatus.resolve(e.status());
             status = Objects.nonNull(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
+            log.error("Exception: getUserWatchlistFeign Email: [{}], Status: [{}]", email, status);
             throw new RestTemplateResponseException(status, e.getMessage(),
                     e.contentUTF8());
         }

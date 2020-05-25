@@ -5,6 +5,7 @@ import in.hp.boot.moviecatalogservice.configs.UserInfoServiceResources;
 import in.hp.boot.moviecatalogservice.delegateproxies.UserInfoServiceProxy;
 import in.hp.boot.moviecatalogservice.exceptions.RestTemplateResponseException;
 import in.hp.boot.moviecatalogservice.models.UserDetail;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class UserInfoService {
 
     @Autowired
@@ -49,6 +51,7 @@ public class UserInfoService {
         } catch (FeignException e) {
             HttpStatus status = HttpStatus.resolve(e.status());
             status = Objects.nonNull(status) ? status : HttpStatus.INTERNAL_SERVER_ERROR;
+            log.error("Exception: getUserByFeign Email: [{}], Status: [{}]", email, status);
             throw new RestTemplateResponseException(status, e.getMessage(),
                     e.contentUTF8());
         }

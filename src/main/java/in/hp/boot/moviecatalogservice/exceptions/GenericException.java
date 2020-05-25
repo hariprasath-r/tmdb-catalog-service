@@ -1,5 +1,8 @@
 package in.hp.boot.moviecatalogservice.exceptions;
 
+import lombok.ToString;
+
+@ToString
 public class GenericException {
     private String timestamp;
     private String message;
