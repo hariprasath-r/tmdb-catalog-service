@@ -1,6 +1,5 @@
 package in.hp.boot.moviecatalogservice.services;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import feign.FeignException;
 import in.hp.boot.moviecatalogservice.configs.UserInfoServiceResources;
 import in.hp.boot.moviecatalogservice.delegateproxies.UserInfoServiceProxy;
@@ -46,7 +45,6 @@ public class UserInfoService {
         }
     }
 
-    @HystrixCommand(fallbackMethod = "getUserByFeignFallback")
     public UserDetail getUserByFeign(String email) {
         try {
             return userInfoServiceProxy.getUserByEmail(email);
@@ -59,8 +57,4 @@ public class UserInfoService {
         }
     }
 
-    public UserDetail getUserByFeignFallback(String email) {
-        log.error("getUserByFeignFallback [{}]", email);
-        return new UserDetail();
-    }
 }

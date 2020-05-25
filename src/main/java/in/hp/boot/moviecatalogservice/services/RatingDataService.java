@@ -1,6 +1,5 @@
 package in.hp.boot.moviecatalogservice.services;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import feign.FeignException;
 import in.hp.boot.moviecatalogservice.configs.RatingDataServiceResources;
 import in.hp.boot.moviecatalogservice.delegateproxies.RatingDataServiceProxy;
@@ -46,7 +45,6 @@ public class RatingDataService {
         }
     }
 
-    @HystrixCommand(fallbackMethod = "getUserRatingFeignFallback")
     public RatingsResponse getUserRatingFeign(String email) {
         try {
             return ratingDataServiceProxy.getRatingsForUser(email);
@@ -57,10 +55,6 @@ public class RatingDataService {
             throw new RestTemplateResponseException(status, e.getMessage(),
                     e.contentUTF8());
         }
-    }
-
-    public RatingsResponse getUserRatingFeignFallback(String email) {
-        return new RatingsResponse();
     }
 
     public WatchlistResponse getUserWatchlist(String email) {
