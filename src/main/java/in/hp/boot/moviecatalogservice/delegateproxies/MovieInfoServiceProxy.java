@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "${movie-info-service.name}", path = "${movie-info-service.movie-info-resource}")
+@FeignClient(name = "${movie-info-service.name}", path = "${movie-info-service.movie-info-resource}",
+        fallbackFactory = MovieInfoFallbackFactory.class)
 public interface MovieInfoServiceProxy {
 
     @GetMapping("{movieId}")
