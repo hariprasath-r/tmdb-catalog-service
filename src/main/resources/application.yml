@@ -1,14 +1,28 @@
 server:
-  port: 8400
+  port: ${PORT:8400}
   error.include-stacktrace: never
 
-spring:
-  application.name: movie-catalog-service
-
-management.endpoints.web.exposure.include: "*"
+feign.hystrix.enabled: false
 
 endpoints:
-  user-info-service: http://localhost:8100
-  movie-info-service: http://localhost:8200
-  rating-data-service: http://localhost:8300
+  user-info-service: http://user-info-service
+  movie-info-service: http://movie-info-service
+  rating-data-service: http://rating-data-service
   version: /v1
+
+user-info-service:
+  name: user-info-service
+  users: /users
+  users-resource: ${endpoints.version}${user-info-service.users}
+
+rating-data-service:
+  name: rating-data-service
+  ratings: /ratings
+  watchlist: /watchlist
+  rating-resource: ${endpoints.version}${rating-data-service.ratings}
+  watchlist-resource: ${endpoints.version}${rating-data-service.watchlist}
+
+movie-info-service:
+  name: movie-info-service
+  movie-info: /movie-info
+  movie-info-resource: ${endpoints.version}${movie-info-service.movie-info}

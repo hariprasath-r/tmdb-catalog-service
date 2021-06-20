@@ -8,8 +8,8 @@ public class RatingDataServiceResources {
     public final static String RATINGS = "/ratings";
     public final static String WATCHLIST = "/watchlist";
 
-    private String ratingDataService;
-    private String version;
+    private final String ratingDataService;
+    private final String version;
 
     @Autowired
     public RatingDataServiceResources(EndpointsConfig endpointsConfig) {
