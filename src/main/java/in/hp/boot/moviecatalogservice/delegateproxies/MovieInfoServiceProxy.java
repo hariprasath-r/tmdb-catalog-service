@@ -1,9 +1,9 @@
 package in.hp.boot.moviecatalogservice.delegateproxies;
 
 import feign.FeignException;
-import feign.hystrix.FallbackFactory;
 import in.hp.boot.moviecatalogservice.models.MovieInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
